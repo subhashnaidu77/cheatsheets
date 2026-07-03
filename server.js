@@ -8,16 +8,21 @@ const server = http.createServer((request,response)=>{
     })
 
     request.on('end',()=>{
-        const user = JSON.parse(data);
+        try {
+            const user = JSON.parse(data);
 
-        if(user.username==='student' && user.password==='1234'){
-            const token = 'SECRET_TOKEN'+ Math.random();
-            response.writeHead(200,{'Content-Type':'application/json'});
-            response.end(JSON.stringify({message:'login done',token:token}));
-        }
-        else{
-            response.writeHead(401,{'Content-Type':'application/json'});
-            response.end(JSON.stringify({message:'invalid credentials'}));
+            if(user.username==='student' && user.password==='1234'){
+                const token = 'SECRET_TOKEN'+ Math.random();
+                response.writeHead(200,{'Content-Type':'application/json'});
+                response.end(JSON.stringify({message:'login done',token:token}));
+            }
+            else{
+                response.writeHead(401,{'Content-Type':'application/json'});
+                response.end(JSON.stringify({message:'invalid credentials'}));
+            }
+        } catch (error) {
+            response.writeHead(400,{'Content-Type':'application/json'});
+            response.end(JSON.stringify({message:'bad JSON data'}));
         }
     })
    } else {
